@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 27cb7fb4df2db3a42a070c46ecd3eec7, type: 3}
+  m_Name: BOW_ATK_2
+  m_EditorClassIdentifier: 
+  IsProjectile: 0
+  AnimationData: {fileID: 0}
+  CancelStartDelay: 0.645
+  ExitDelay: 0.908
+  SuperAmmorStartDelay: 0
+  SuperAmmorExitDelay: 0
+  NextInputStartDelay: 0.53978914
+  NextInputExitDelay: 1
+  tHitBoxDatas:
+  - StartDelay: 0.2891326
+    ExitDelay: 0.55333996
+    ParryedType: 0
+    ParryExitDelay: 0
+    HitboxScale: {x: 0, y: 0, z: 0}
+    HitboxOfset: {x: 0, y: 0, z: 0}
+    ForceType: 0
+    ForceStrength: 0
+  RequiedData:
+    RangeIn: 0
+  DistanceToTarget: 0

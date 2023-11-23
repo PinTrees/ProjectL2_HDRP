@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1a7eed65e2fb5ef4e9fe15baae636e14, type: 3}
+  m_Name: tree_1
+  m_EditorClassIdentifier: 
+  Type: 0
+  ID: 7ba19108-f142-422f-a3de-0663e1b21809
+  IsRandomRotation: 0
+  IsAdjustRatio: 1
+  limitCount: 0
+  Object: {fileID: 1939283450936992, guid: 52f791fddcc0aa647b5eae5159898f2c, type: 3}
+  ScaleWidth: 1

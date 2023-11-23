@@ -1,0 +1,57 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 211d991cc96b7c04588713dfd449b9b9, type: 3}
+  m_Name: KATANA_001
+  m_EditorClassIdentifier: 
+  UID: b7395db4-171f-4d0d-a715-bcf602825ad9
+  Type: 0
+  Icon: {fileID: 21300000, guid: e26b4a58239ba4fdfb1febee03deec71, type: 3}
+  Prefab: {fileID: 84768217887864967, guid: 703a9a816a970d24dafe8a5cb28d7c17, type: 3}
+  Name: 
+  Info: 
+  Price: 0
+  WeaponIDX: 1
+  EquipPrefab: {fileID: 84768217887864967, guid: 703a9a816a970d24dafe8a5cb28d7c17,
+    type: 3}
+  Atk: 0
+  AtkNormalDatas:
+  - {fileID: 11400000, guid: ebbc47f994b2d90479ae44ae247668c8, type: 2}
+  - {fileID: 11400000, guid: 8ffc6c282e529c7439b82d61d0b4e5b6, type: 2}
+  - {fileID: 11400000, guid: 90eec9c7d8dd7e3449baa8db4fee07d8, type: 2}
+  - {fileID: 11400000, guid: a99c186deebeb7c4b83bee8c2a0ee687, type: 2}
+  AtkStrongDatas:
+  - {fileID: 11400000, guid: 35932ac3f3a473e4bbf2fdc28d08e27c, type: 2}
+  - {fileID: 11400000, guid: 3c81b3358d64aa643815d7eb42785a6b, type: 2}
+  - {fileID: 11400000, guid: fc8a19fb62caed4429edf175c3856f71, type: 2}
+  AtkKillDatas:
+  - AnimationName: 
+    DeathAnimation: 0
+    ExitDelay: 0.266
+    TickDamageDelay: []
+    SuperAmmorStartDelay: 0
+    SuperAmmorExitDelay: 0
+    KillFindRange: 0
+    KillDistance: 0
+  AtkBackKillDatas:
+  - AnimationName: 
+    DeathAnimation: 0
+    ExitDelay: 0.295
+    TickDamageDelay: []
+    SuperAmmorStartDelay: 0
+    SuperAmmorExitDelay: 0
+    KillFindRange: 1.7714727
+    KillDistance: 0.7407976
+  OnEquipDelay: 0
+  OffEquipDelay: 0
+  OnDeffDelay: 0
+  StartParryDelay: 0
+  ExitParryDelay: 1

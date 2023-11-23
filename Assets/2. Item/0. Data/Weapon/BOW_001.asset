@@ -1,0 +1,63 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 211d991cc96b7c04588713dfd449b9b9, type: 3}
+  m_Name: BOW_001
+  m_EditorClassIdentifier: 
+  UID: b7395db4-171f-4d0d-a715-bcf602825ad9
+  Type: 0
+  Icon: {fileID: 21300000, guid: 711d9e1db66d2334aa75bb3d48a326c5, type: 3}
+  Prefab: {fileID: 6947329164030445279, guid: 57364187e7baa0045819cf9b24e863f2, type: 3}
+  Name: 
+  Info: 
+  Price: 0
+  WeaponType: 1
+  WeaponIDX: 101
+  EquipPrefab: {fileID: 6947329164030445279, guid: 57364187e7baa0045819cf9b24e863f2,
+    type: 3}
+  Atk: 0
+  AtkNormalDatas:
+  - {fileID: 11400000, guid: 17c49c337a069744fa20263a56ef1e04, type: 2}
+  - {fileID: 11400000, guid: d1b4dfaef13738f4e8e042db29224cda, type: 2}
+  - {fileID: 11400000, guid: b7bf1834d4969904cb83cebd7e757e04, type: 2}
+  - {fileID: 11400000, guid: 6ec79c35074dd994da8cf709e5107044, type: 2}
+  AtkStrongDatas:
+  - {fileID: 11400000, guid: e1b3c085dde483a40a9d4eae3600a67a, type: 2}
+  - {fileID: 11400000, guid: bdfe6ff2492f364489bac1126879a1a3, type: 2}
+  - {fileID: 11400000, guid: 890e63ef951badb41b95f9701844b70a, type: 2}
+  AtkNormalDatas_Both:
+  - {fileID: 0}
+  AtkNormalDatas_Once: []
+  AtkStrongDatas_Both: []
+  AtkStrongDatas_Once: []
+  AtkKillDatas:
+  - AnimationName: 
+    DeathAnimation: 0
+    ExitDelay: 0.266
+    TickDamageDelay: []
+    SuperAmmorStartDelay: 0
+    SuperAmmorExitDelay: 0
+    KillFindRange: 0
+    KillDistance: 0
+  AtkBackKillDatas:
+  - AnimationName: 
+    DeathAnimation: 0
+    ExitDelay: 0.295
+    TickDamageDelay: []
+    SuperAmmorStartDelay: 0
+    SuperAmmorExitDelay: 0
+    KillFindRange: 1.7714727
+    KillDistance: 0.7407976
+  OnEquipDelay: 0
+  OffEquipDelay: 0
+  OnDeffDelay: 0
+  StartParryDelay: 0
+  ExitParryDelay: 1
