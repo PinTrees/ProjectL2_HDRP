@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b21f947bd343f14fb0971bd1f4447fa, type: 3}
+  m_Name: desert_1
+  m_EditorClassIdentifier: 
+  height: {fileID: 2800000, guid: de797d35fe3847840b19734469bd954e, type: 3}
+  color: {fileID: 0}
+  mask: {fileID: 0}
+  splat1: {fileID: 2800000, guid: cc1433b2c15c126498e03e8b1cbd63a9, type: 3}
+  splat2: {fileID: 0}
+  roadMask: {fileID: 0}
