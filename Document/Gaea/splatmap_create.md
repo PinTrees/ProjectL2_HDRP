@@ -1,5 +1,5 @@
 ## Unity Terrain 기반 스플랫 맵 생성 (Gaea)
-- 높이맵(HeightMap) 파일만 존재할 경우 Splat 맵 생성에 대한 문서입니다. Gaea를 통해 자체 지형을 생성하려는 경우 landscape_create.md 파일로 이동
+- 높이맵(HeightMap) 파일만 존재할 경우 SplatMap 생성에 대한 문서입니다. Gaea를 통해 자체 지형을 생성하려는 경우 landscape_create.md 파일로 이동
 
 ### 1. HeightMap 파일 로드
 <img width="1200" alt="image" src="https://github.com/PinTrees/ProjectL2_HDRP/assets/59812031/d18ef59d-34bc-4098-9f1d-0d66b1bab131">
