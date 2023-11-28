@@ -12,6 +12,7 @@
 
 ### 3. 높이수준이 변경되었으므로 HeightMap을 추가하고 출력설정에 추가
 - 체크 표시로 변경합니다.
+- Height 맵이 아닌 최종 높이가 변경된 Curve 노드를 출력설정에 추가합니다. (Height 노드 추가 필요 X)
 <img width="1200" alt="image" src="https://github.com/PinTrees/ProjectL2_HDRP/assets/59812031/aa2be1d8-d009-4ef0-a614-95f24226977d">
 
 ### 4. SplatMap 생성 기초 텍스쳐 및 (Slope)경사, (Protrucsion)돌출 노드 추가
