@@ -1,4 +1,3 @@
-using com.mobilin.games;
 using FIMSpace.FSpine;
 using System.Collections;
 using System.Collections.Generic;
@@ -6,8 +5,6 @@ using UnityEngine;
 using NPC.Animalls.State.Base;
 using FIMSpace.FProceduralAnimation;
 using DG.Tweening;
-using Invector;
-using static UnityEngine.UI.GridLayoutGroup;
 using TMPro;
 
 public enum AnimalState
@@ -26,7 +23,7 @@ public enum AnimalState
 [RequireComponent(typeof(LegsAnimator))]
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(CapsuleCollider))]
-[RequireComponent(typeof(mvHealthController))]
+[RequireComponent(typeof(vHealthController))]
 public class AnimallBase : MonoBehaviour
 {
     public FSM<AnimalState> AI = new();

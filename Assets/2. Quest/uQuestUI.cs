@@ -6,11 +6,11 @@ public class uQuestUI : UIObject
 {
 
 
-    protected override void Start()
+    void Start()
     {
     }
 
-    protected override void Update()
+    void Update()
     {
     }
 }

@@ -1,9 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
+
+#if UNITY_EDITOR
 [CustomEditor(typeof(CanInteract))]
 public class CanInteractEditor : Editor
 {
@@ -21,3 +25,4 @@ public class CanInteractEditor : Editor
         Handles.DrawWireDisc(owner.transform.position, Vector3.up, owner.InteractionRange, 1.5f);
     }
 }
+#endif

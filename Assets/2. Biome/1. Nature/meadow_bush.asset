@@ -1,0 +1,64 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 109a2bf9ecdffd3449ec7d86a141d677, type: 3}
+  m_Name: meadow_bush
+  m_EditorClassIdentifier: 
+  SpawnObjectData:
+  - data: {fileID: 11400000, guid: d6fb4ad05a7836e4a8a9445a018f5494, type: 2}
+    offset: {x: 0, y: 0, z: 0}
+    strength: 0.3
+    distribution_center: 0
+    IsSplopeOverride: 0
+    SlopeMin: 0
+    SlopeMax: 31.170382
+  - data: {fileID: 11400000, guid: 6393656d5d8f58341aae3f90a7986c25, type: 2}
+    offset: {x: 0, y: 0, z: 0}
+    strength: 0.002
+    distribution_center: 0
+    IsSplopeOverride: 0
+    SlopeMin: 0
+    SlopeMax: 0
+  - data: {fileID: 11400000, guid: 3a6598830773c1b4c91ff33cf03db576, type: 2}
+    offset: {x: 0, y: 0, z: 0}
+    strength: 0.002
+    distribution_center: 0
+    IsSplopeOverride: 0
+    SlopeMin: 0
+    SlopeMax: 0
+  - data: {fileID: 11400000, guid: 88ce9c7147dd2394a9ba1b3b76905563, type: 2}
+    offset: {x: 0, y: 0, z: 0}
+    strength: 0.002
+    distribution_center: 0
+    IsSplopeOverride: 0
+    SlopeMin: 0
+    SlopeMax: 0
+  - data: {fileID: 11400000, guid: 4a3c57df51f7dea43b7d4d9a9a888f9d, type: 2}
+    offset: {x: 0, y: 0, z: 0}
+    strength: 0.003
+    distribution_center: 0
+    IsSplopeOverride: 0
+    SlopeMin: 0
+    SlopeMax: 0
+  - data: {fileID: 11400000, guid: 9a3b149c2225d8a439e670f042b3bb53, type: 2}
+    offset: {x: 0, y: 0, z: 0}
+    strength: 0.007
+    distribution_center: 0
+    IsSplopeOverride: 0
+    SlopeMin: 0
+    SlopeMax: 0
+  - data: {fileID: 11400000, guid: ab795adee62b8f242b138e4758005a36, type: 2}
+    offset: {x: 0, y: 0, z: 0}
+    strength: 0.003
+    distribution_center: 0
+    IsSplopeOverride: 0
+    SlopeMin: 0
+    SlopeMax: 0

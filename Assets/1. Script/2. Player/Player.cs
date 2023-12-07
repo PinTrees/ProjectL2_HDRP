@@ -1,17 +1,32 @@
-using UnityEngine;
 using System.Linq;
-using System.Collections;
 using System.Collections.Generic;
+
+using UnityEngine;
 
 using DG.Tweening;
 using KWS;
-using Invector;
-using com.mobilin.games;
 using FIMSpace.FLook;
 using FIMSpace.FProceduralAnimation;
 
 using PlayerState;
-using Unity.VisualScripting;
+
+
+
+
+/**
+ * Invector 시스템 사용 금지
+ * MIS 미들웨어 사용 금지
+ * 
+ * 브릿지 직접 구현
+ * 호환성 및 확장성 문제로 인해 기존의 프로그램을 사용하지 않는 것으로 확정되었습니다.
+ * 
+ * LegAnimator에서 iStep 으로 변경
+ * 
+ * 
+ */
+
+
+
 
 
 public enum PLAYER_STATE
@@ -101,18 +116,14 @@ public static class PlayerStaticStatus
 [RequireComponent(typeof(MeshRenderer))]
 [RequireComponent(typeof(CapsuleCollider))]
 [RequireComponent(typeof(Rigidbody))]
-//[RequireComponent(typeof(KW_Buoyancy))]
-//[RequireComponent(typeof(KW_InteractWithWater))]
 [RequireComponent(typeof(LegsAnimator))]
 [RequireComponent(typeof(FLookAnimator))]
-[RequireComponent(typeof(LockOnPlayer))]
-[RequireComponent(typeof(mvHealthController))]
-[RequireComponent(typeof(mvSpController))]
+[RequireComponent(typeof(vHealthController))]
+[RequireComponent(typeof(vSpController))]
 [RequireComponent(typeof(PlayerInput))]
 public class Player : MonoBehaviour
 {
     public FSM<PLAYER_STATE> AI = new FSM<PLAYER_STATE>();
-
 
     public Transform    LookAtTransform;
     [HideInInspector]   public Stat Stat;
@@ -123,7 +134,6 @@ public class Player : MonoBehaviour
 
     #region Main Component
     private KW_Buoyancy _buoyancy = null;
-    private LockOnBase lockOnSystem;
     private uMapMark marker;
     #endregion
 
@@ -145,7 +155,7 @@ public class Player : MonoBehaviour
     #region Init Func
     private void Start()
     {
-        _buoyancy = GetComponent<KW_Buoyancy>();
+        //_buoyancy = GetComponent<KW_Buoyancy>();
         _rootTransform = transform.parent;
 
         // FSM 초기화
@@ -201,10 +211,7 @@ public class Player : MonoBehaviour
         marker.Init(transform);
         marker.Enter();
 
-        UIManager.Instance.StatusView.SetHealthController(AI.healthController);
         AI.healthController.maxHealth = 10000;
-
-        lockOnSystem = GetComponent<LockOnBase>();
 
         PlayerStaticStatus.isGrounded = true;
     }
@@ -221,8 +228,6 @@ public class Player : MonoBehaviour
         UpdateDeath();
         UpdateBuoyancy();
         UpdateKillTarget();
-
-        UpdateLookCamaer();
     }
 
     private void UpdateKillTarget()
@@ -311,14 +316,6 @@ public class Player : MonoBehaviour
     private void UpdateBuoyancy()
     {
         if (!IsInWater) return;
-    }
-
-    private void UpdateLookCamaer()
-    {
-        if (lockOnSystem.IsLockOnTarget && mvTargetManager.Instance.CurrentTarget)
-        {
-            LookAtTransform.position = mvTargetManager.Instance.CurrentTarget.transform.position;
-        }
     }
     #endregion
 
@@ -440,3 +437,5 @@ public class Player : MonoBehaviour
     }
     #endregion
 }
+
+

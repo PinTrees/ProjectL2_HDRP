@@ -1,0 +1,55 @@
+LOD 0 - mesh - dynamic
+LOD 1 - impostor - (grass 50%)
+Impostor - combine mesh - static (grass X) 
+
+
+Navigation - runtime bake (Astar)
+dynamic
+
+Framework
+
+베이킹된 메쉬 런타임 성능
+임포스터 오버드로우 런타임 성능 비교
+
+LOD 1에서 가장 많은 오버헤드 발생 가능성
+
+TVE와 호환 가능한 에디터 개발
+TVE Dynamic 생성기 - Static - Prop 생성기
+
+관리되는 식생 정보
+Dynamic Prefab - LOD 3 + Impostor
+Static Mesh -
+Impostor - 
+
+3개의 데이터 동기화
+
+
+
+
+사용 가능한 식색 오브젝트 목록
+
+쉐이더 변경
+프리팹 변경
+임포스터 생성
+스태틱 프리팹 생성
+스태틱 프리팹 메쉬 결합
+
+이미 익스포트된 데이터는 변경이 거의 불가능 하므로 미리 테스트 후 빌드
+
+
+지형 오브젝트에대한 전역관리, 각 스포너가 관리.
+전역관리로 고정, 스포너 객체는 프리팹 생성기로 다운그레이드
+
+
+각 셀의 특정에 따라 미리 제작된 기후, 날씨, 환경에 대한 데이터에 따라 소환 - 완료
+
+
+
+
+
+
+
+
+
+
+

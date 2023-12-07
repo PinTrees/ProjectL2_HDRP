@@ -1,14 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
+
+#if UNITY_EDITOR
 using UnityEditor;
 using UnityEditorInternal;
-using UnityEngine;
-using static UnityEngine.Rendering.DebugUI;
+#endif
 
-
-
-
-// Editor Main
+#if UNITY_EDITOR
 [CustomEditor(typeof(AnimallData))]
 public class AnimallDataEditor : Editor
 {
@@ -269,3 +268,4 @@ public class AnimallDataEditor : Editor
     /// </summary>
   
 }
+#endif

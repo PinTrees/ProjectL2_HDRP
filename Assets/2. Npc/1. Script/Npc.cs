@@ -5,7 +5,6 @@ using UnityEngine.Analytics;
 
 using NPC.State;
 using DG.Tweening;
-using Invector;
 using System.Linq;
 using UnityEngine.Timeline;
 

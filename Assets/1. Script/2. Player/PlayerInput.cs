@@ -2,40 +2,26 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-using com.mobilin.games;
-using Invector.vCamera;
-using Invector;
-using Invector.vCharacterController;
 using UnityEngine.EventSystems;
 using UnityEngine.Rendering.HighDefinition;
 using System.Linq;
 using NPC.Animalls.State.HorseBase;
-using static UnityEngine.UI.GridLayoutGroup;
 
-[RequireComponent(typeof(Player))]
+
 public class PlayerInput : MonoBehaviour
 {
-    public vThirdPersonCamera tpCamera;       
-
     protected Camera _cameraMain;
     protected bool withoutMainCamera;
 
-    [vEditorToolbar("Camera Settings")]
+    [Header("Camera Settings")]
     public bool lockCameraInput;
     public bool invertCameraInputVertical;
     public bool invertCameraInputHorizontal;
-
-    [vEditorToolbar("Inputs")]
-    [Header("Camera Input")]
-    public GenericInput rotateCameraXInput = new GenericInput("Mouse X", "RightAnalogHorizontal", "Mouse X");
-    public GenericInput rotateCameraYInput = new GenericInput("Mouse Y", "RightAnalogVertical", "Mouse Y");
-    public GenericInput cameraZoomInput = new GenericInput("Mouse ScrollWheel", "", "");
 
     [Range(0f, 1f)]
     [SerializeField]
     private float moveAnimationSmooth = 0.75f;
 
-    private LockOnBase lockOnSystem;
     private Player owner;
 
     public virtual Camera cameraMain
@@ -61,48 +47,11 @@ public class PlayerInput : MonoBehaviour
             _cameraMain = value;
         }
     }
-    public virtual void FindCamera()
-    {
-        var tpCameras = FindObjectsOfType<vThirdPersonCamera>();
-
-        if (tpCameras.Length > 1)
-        {
-            tpCamera = System.Array.Find(tpCameras, tp => !tp.isInit);
-
-            if (tpCamera == null)
-            {
-                tpCamera = tpCameras[0];
-            }
-
-            if (tpCamera != null)
-            {
-                for (int i = 0; i < tpCameras.Length; i++)
-                {
-                    if (tpCamera != tpCameras[i])
-                    {
-                        Destroy(tpCameras[i].gameObject);
-                    }
-                }
-            }
-        }
-        else if (tpCameras.Length == 1)
-        {
-            tpCamera = tpCameras[0];
-        }
-
-        if (tpCamera && tpCamera.mainTarget != transform)
-        {
-            tpCamera.SetMainTarget(this.transform);
-        }
-    }
-
 
     #region Init Func
     void Start()
     {
         owner = GetComponent<Player>();
-        lockOnSystem = GetComponent<LockOnBase>();
-        FindCamera();
     }
     #endregion
 
@@ -126,7 +75,6 @@ public class PlayerInput : MonoBehaviour
     }
     protected virtual void LateUpdate()
     {
-        CameraInput();
         LockOnInput();
     }
     protected virtual void FixedUpdate()
@@ -139,46 +87,9 @@ public class PlayerInput : MonoBehaviour
 
 
     #region Input Func
-    public virtual void CameraInput()
-    {
-        if (lockOnSystem.IsLockOnTarget)
-        {
-            return;
-        }
-        
-        if (!cameraMain)
-        {
-            return;
-        }
-
-        if (tpCamera == null)
-        {
-            return;
-        }
-
-        var Y = lockCameraInput ? 0f : rotateCameraYInput.GetAxis();
-        var X = lockCameraInput ? 0f : rotateCameraXInput.GetAxis();
-        if (invertCameraInputHorizontal)
-        {
-            X *= -1;
-        }
-
-        if (invertCameraInputVertical)
-        {
-            Y *= -1;
-        }
-
-        var zoom = cameraZoomInput.GetAxis();
-
-        tpCamera.RotateCamera(X, Y);
-        if (!lockCameraInput)
-        {
-            tpCamera.Zoom(zoom);
-        }
-    }
     public virtual void LockOnInput()
     {
-        if (lockOnSystem.IsLockOnTarget)
+        /*if (lockOnSystem.IsLockOnTarget)
         {
             if (Input.GetKeyDown(KeyCode.Mouse2))
             {
@@ -217,7 +128,7 @@ public class PlayerInput : MonoBehaviour
                     LostTarget();
                 }
             }
-        }
+        }*/
     }
     public virtual bool EquipInput()
     {
@@ -569,44 +480,6 @@ public class PlayerInput : MonoBehaviour
 
     public void LockOnTarget()
     {
-        //tpCamera.SetZoom(3.5f);
-        mvTargetManager.Instance.CurrentTarget.isLocked = true;
-        tpCamera.SetLockTarget(mvTargetManager.Instance.CurrentTarget.tr);
-
-        Monster monster;
-        mvTargetManager.Instance.CurrentTarget.tr.parent.TryGetComponent(out monster);
-
-        AnimallBase animall;
-        mvTargetManager.Instance.CurrentTarget.tr.parent.TryGetComponent(out animall);
-
-        Npc npc;
-        mvTargetManager.Instance.CurrentTarget.tr.parent.TryGetComponent(out npc);
-
-
-        if (monster)
-        {
-  /*          tpCamera.dynamicRotateOffset = monster.CameraLockOnRotateOffset;
-            tpCamera.dynamicOffsetMouse = monster.CameraLockOnMouseOffset;*/
-        }
-        else if(npc)
-        {
-    /*        tpCamera.dynamicRotateOffset = Vector3.zero;
-            tpCamera.dynamicOffsetMouse = new Vector3(0, -22);*/
-        }
-        else if(animall)
-        {
- /*           tpCamera.dynamicRotateOffset = animall.CameraLockOnRotateOffset;
-            tpCamera.dynamicOffsetMouse = animall.CameraLockOnMouseOffset;*/
-        }
-
-        lockOnSystem.IsLockOnTarget = true;
-    }
-    public void LostTarget()
-    {
-/*      lockOnSystem.IsLockOnTarget = false;
-        tpCamera.dynamicRotateOffset = Vector3.zero;
-        tpCamera.dynamicOffsetMouse = Vector3.zero;*/
-        tpCamera.RemoveLockTarget();
     }
 
     // 이 함수는 인터렉션 레이캐스트 처리 함수 입니다. 

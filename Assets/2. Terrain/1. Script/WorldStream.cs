@@ -1,181 +1,264 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEditor;
+
 using UnityEngine;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.HighDefinition;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.ResourceManagement.ResourceProviders;
-
+using UnityEngine.SceneManagement;
 
 #if UNITY_EDITOR
+using UnityEditor;
+using Unity.EditorCoroutines.Editor;
 #endif
 
 
+public class _Editor_StreamScene
+{
+    public string code;
+    public Scene? scene;
+}
+
 public class WorldStream : MonoBehaviour
 {
-    public float BaseDistanceLODO = 100;
-    public float BaseDistanceImpostor = 500;
+    public GameObject aa;
 
+    public float BaseDistanceLODO = 100;
+    public float BaseDistanceStatic = 500;
+    public float BaseDistanceImpostor = 1000;
     public float UnLoadDistancePercent = 0.3f;
 
-    [SerializeField]
-    [HideInInspector]
-    List<BiomeSpawner> biomes = new();
+    public bool load_background = true;
 
-    Transform player;
+    public static int BaseChunkCount = 2;
+    public static int ImpostorChunkCount = 9;
 
-    public int BiomeCount { get => biomes.Count; }
+    [SerializeField] List<Biome> biomeChunkRoots = new List<Biome>();
+    public Dictionary<string, bool> ChunksExportExist = new();
+    Dictionary<string, bool> scene_lod0_load = new();
+    Dictionary<string, bool> scene_impostor_load = new();
+    Dictionary<string, SceneInstance?> scene_impostor = new();
+    Dictionary<string, SceneInstance?> scene_lod0 = new();
+
+    // Editor Use
+#if UNITY_EDITOR
+    [Header("Editor")]
+    [SerializeField] List<string> _editor_chunk_export_exist = new();
+    [SerializeField] List<string> _editor_scene_lod0_load = new();
+    [SerializeField] List<string> _editor_scene_impostor_load = new();
+    [SerializeField] List<_Editor_StreamScene> _editor_scene_lod0 = new();
+    [SerializeField] List<_Editor_StreamScene> _editor_scene_impostor = new();
+    [SerializeField] EditorCoroutine _editor_stream;
+#endif
+
+    [SerializeField][HideInInspector] Transform streamTarget;
 
     void Start()
     {
-        player = PlayerManager.Instance.Player.transform;
-        InitBiomes();
+        Init();
+        StartCoroutine(ChunkStream());
     }
 
-    public void InitBiomes()
-    { 
-        //biomes = biomeParentTransform.GetComponentsInChildren<BiomeSpawner>().ToList();
-        biomes = GameObject.FindObjectsOfType<BiomeSpawner>().ToList();
-    }
-
-    void FixedUpdate()
+    public void Init()
     {
-        var current_position = player.position;
+        DynamicResolutionHandler.SetDynamicResScaler(() => 80, DynamicResScalePolicyType.ReturnsPercentage);
 
-        biomes.ForEach(biome =>
+        scene_lod0_load.Clear();
+        scene_impostor_load.Clear();
+        scene_lod0.Clear();
+        scene_impostor.Clear();
+
+        streamTarget = PlayerManager.Instance.Player.transform;
+        biomeChunkRoots = GameObject.FindObjectsOfType<Biome>().ToList();
+        biomeChunkRoots.ForEach(e => e.Init());
+        foreach (var k in ChunksExportExist.Keys)
         {
-            var distance = Vector3.Distance(current_position, biome.transform.position);
-            if (!biome.IsLoadSceneLod0 && biome.IsExported && distance < BaseDistanceLODO)
-            {
-                biome.IsLoadSceneLod0 = true;
-                SceneManagerExtensions.LoadSceneAsync_Addressables(biome.AssetPath_StreamSceneLocal + biome.ExportDataId + ".unity"
-                    , (AsyncOperationHandle<SceneInstance> instane) =>
-                    {
-                        biome.scene_lod0_instance = instane.Result;
-                    });
-
-                if (biome.IsLoadSceneImpostor)
-                {
-                    biome.IsLoadSceneImpostor = false;
-                    if (biome.scene_impostor_instance != null)
-                        SceneManagerExtensions.UnloadSceneAsync_Addressables(biome.scene_impostor_instance.Value);
-
-                    biome.scene_impostor_instance = null;
-                }
-            }
-
-            if (!biome.IsLoadSceneImpostor && biome.IsExported
-            && distance < BaseDistanceImpostor && distance > BaseDistanceLODO)
-            {
-                biome.IsLoadSceneImpostor = true;
-                SceneManagerExtensions.LoadSceneAsync_Addressables(biome.AssetPath_StreamSceneLocal + biome.ExportDataId + "_impostor.unity"
-                     , (AsyncOperationHandle<SceneInstance> instane) =>
-                     {
-                         biome.scene_impostor_instance = instane.Result;
-                     });
-
-                if (biome.IsLoadSceneLod0)
-                {
-                    biome.IsLoadSceneLod0 = false;
-                    if (biome.scene_lod0_instance != null)
-                        SceneManagerExtensions.UnloadSceneAsync_Addressables(biome.scene_lod0_instance.Value);
-
-                    biome.scene_lod0_instance = null;
-                }
-            }
-
-            if (biome.IsLoadSceneImpostor && distance > BaseDistanceImpostor * (1 + UnLoadDistancePercent))
-            {
-                biome.IsLoadSceneImpostor = false;
-                if (biome.scene_impostor_instance != null)
-                    SceneManagerExtensions.UnloadSceneAsync_Addressables(biome.scene_impostor_instance.Value);
-
-                biome.scene_impostor_instance = null;
-            }
-
-            if (biome.IsLoadSceneLod0 && distance > BaseDistanceLODO * (1 + UnLoadDistancePercent))
-            {
-                biome.IsLoadSceneLod0 = false;
-                if (biome.scene_lod0_instance != null)
-                    SceneManagerExtensions.UnloadSceneAsync_Addressables(biome.scene_lod0_instance.Value);
-
-                biome.scene_lod0_instance = null;
-            }
-        });
+            scene_lod0_load[k] = false;
+            scene_impostor_load[k] = false;
+            scene_lod0[k] = null;
+            scene_impostor[k] = null;
+        }
     }
 
+    // 전투가 진행중일 경우 임포스터 청크 로드 금지 - 프레임 드랍 방지
+    // 가까운 거리의 청크만 로드
+    IEnumerator ChunkStream()
+    {
+        Application.backgroundLoadingPriority = load_background ? ThreadPriority.Low : ThreadPriority.High;
+
+        while (true)
+        {
+            for (int x = -ImpostorChunkCount; x < ImpostorChunkCount; ++x)
+            {
+                for (int z = -ImpostorChunkCount; z < ImpostorChunkCount; ++z)
+                {
+                    if(Mathf.Abs(x) <= BaseChunkCount && Mathf.Abs(z) <= BaseChunkCount)
+                    {
+                        var currentpos = streamTarget.position + new Vector3(x, 0, z) * Biome.StreamChunkSize;
+                        string chunk_key = Biome.GetChunkExportId(currentpos);
+
+                        if (ChunksExportExist.ContainsKey(chunk_key)
+                            && ChunksExportExist[chunk_key] && !scene_lod0_load[chunk_key] && scene_lod0[chunk_key] == null)
+                        {
+                            scene_lod0_load[chunk_key] = true;
+                            yield return new WaitForSeconds(0.3f);
+                            SceneManagerExtensions.LoadSceneAsync_Addressables(Biome.AssetPath_StreamSceneWorld
+                                + chunk_key, (AsyncOperationHandle<SceneInstance> instane) =>
+                                {
+                                    scene_lod0[chunk_key] = instane.Result;
+                                });
+
+                            // 씬 로드까지 기다린후 제거
+                            if (scene_impostor_load[chunk_key] && scene_impostor[chunk_key] != null)
+                            {
+                                scene_impostor_load[chunk_key] = false;
+                                yield return new WaitForSeconds(0.3f);
+                                SceneManagerExtensions.UnloadSceneAsync_Addressables(scene_impostor[chunk_key].Value, (AsyncOperationHandle<SceneInstance> instane) =>
+                                {
+                                    scene_impostor[chunk_key] = null;
+                                });
+                            }
+                        }
+                    }
+                    else
+                    {
+                        var currentpos = streamTarget.position + new Vector3(x, 0, z) * Biome.StreamChunkSize;
+                        string chunk_key = Biome.GetChunkExportId(currentpos);
+
+                        if (ChunksExportExist.ContainsKey(chunk_key)
+                            && ChunksExportExist[chunk_key] && !scene_impostor_load[chunk_key] && scene_impostor[chunk_key] == null)
+                        {
+                            scene_impostor_load[chunk_key] = true;
+                            yield return new WaitForSeconds(0.3f);
+                            SceneManagerExtensions.LoadSceneAsync_Addressables(Biome.AssetPath_StreamSceneWorld_Impostor
+                                + chunk_key.Split(".").First() + "_impostor.unity", (AsyncOperationHandle<SceneInstance> instane) =>
+                                {
+                                    scene_impostor[chunk_key] = instane.Result;
+                                });
+                            
+                            // 씬 로드까지 기다린 후 제거
+                            if (scene_lod0_load[chunk_key] && scene_lod0[chunk_key] != null)
+                            {
+                                scene_lod0_load[chunk_key] = false;
+                                yield return new WaitForSeconds(0.3f);
+                                SceneManagerExtensions.UnloadSceneAsync_Addressables(scene_lod0[chunk_key].Value, (AsyncOperationHandle<SceneInstance> instane) =>
+                                {
+                                    scene_lod0[chunk_key] = null;
+                                });
+                            }
+                        }
+                    }
+                }
+            }
+
+            yield return new WaitForSeconds(0.3f);
+        }
+    }
+
+#if UNITY_EDITOR
+    IEnumerator _Editor_ChunkStream()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(5f);
+
+            var cameras = SceneView.GetAllSceneCameras();
+            if (cameras == null) continue;
+            if (cameras.Length < 1) continue;
+
+            var view = cameras.First();
+            var current_position = view.transform.position;
+
+            for (int x = -ImpostorChunkCount; x < ImpostorChunkCount; ++x)
+            {
+                for (int z = -ImpostorChunkCount; z < ImpostorChunkCount; ++z)
+                {
+                    if (Mathf.Abs(x) <= BaseChunkCount && Mathf.Abs(z) <= BaseChunkCount)
+                    {
+                        var currentpos = current_position + new Vector3(x, 0, z) * Biome.StreamChunkSize;
+                        string chunk_key = Biome.GetChunkExportId(currentpos);
+
+                        if (_editor_chunk_export_exist.Contains(chunk_key) && !_editor_scene_lod0_load.Contains(chunk_key))
+                        {
+                            _editor_scene_lod0_load.Add(chunk_key);
+                            var scene = SceneManagerExtensions._Editor_LoadScene(Biome.AssetPath_StreamSceneWorld + chunk_key);
+
+                            var stream = new _Editor_StreamScene();
+                            stream.code = chunk_key;
+                            stream.scene = scene;
+                            _editor_scene_lod0.Add(stream);
+
+                            if (_editor_scene_impostor_load.Contains(chunk_key))
+                            {
+                                _editor_scene_impostor_load.Remove(chunk_key);
+                                var container = _editor_scene_impostor.Where(e => e.code == chunk_key).ToList();
+                                container.ForEach(e => {
+                                    if (e != null) SceneManagerExtensions._Editor_UnloadScene(e.scene.Value);
+                                    _editor_scene_impostor.Remove(e);
+                                });
+                            }
+                        }
+                    }
+                    else
+                    {
+                        var currentpos = current_position + new Vector3(x, 0, z) * Biome.StreamChunkSize;
+                        string chunk_key = Biome.GetChunkExportId(currentpos);
+
+                        if (_editor_chunk_export_exist.Contains(chunk_key) &&  !_editor_scene_impostor_load.Contains(chunk_key))
+                        {
+                            _editor_scene_impostor_load.Add(chunk_key);
+                            var scene = SceneManagerExtensions._Editor_LoadScene(Biome.AssetPath_StreamSceneWorld_Impostor + chunk_key.Split(".").First() + "_impostor.unity");
+                         
+                            var stream = new _Editor_StreamScene();
+                            stream.code = chunk_key;
+                            stream.scene = scene;
+                            _editor_scene_impostor.Add(stream);
+
+                            if (_editor_scene_lod0_load.Contains(chunk_key))
+                            {
+                                _editor_scene_lod0_load.Remove(chunk_key);
+                                var container = _editor_scene_lod0.Where(e => e.code == chunk_key).ToList();
+                                container.ForEach(e => {
+                                    if (e != null) SceneManagerExtensions._Editor_UnloadScene(e.scene.Value);
+                                    _editor_scene_lod0.Remove(e);
+                                });
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+ 
     public void _Editor_UpdateWorldStream()
     {
-        var cameras = SceneView.GetAllSceneCameras();
-        if (cameras == null) return;
-        if (cameras.Length < 1) return;
+        _Editor_ExitWorldStream();
 
-        var view = cameras.First();
-        var current_position = view.transform.position;
+        streamTarget = GameObject.FindObjectOfType<Player>().transform;
+        GameObject.FindObjectsOfType<Biome>().ToList().ForEach(e => e.Init());
 
-        biomes.ForEach(biome =>
-        {
-            var distance = Vector3.Distance(current_position, biome.transform.position);
-            if(!biome.IsLoadSceneLod0_Editor && biome.IsExported && distance < BaseDistanceLODO)
-            {
-                biome.IsLoadSceneLod0_Editor = true;
-                biome.scene_lod0 = SceneManagerExtensions._Editor_LoadScene(biome.AssetPath_StreamSceneLocal + biome.ExportDataId + ".unity");
+        _editor_chunk_export_exist.Clear();
+        foreach (var k in ChunksExportExist.Keys) _editor_chunk_export_exist.Add(k);
 
-                if (biome.IsLoadSceneImpostor_Editor)
-                {
-                    biome.IsLoadSceneImpostor_Editor = false;
-                    if (biome.scene_impostor != null)
-                        SceneManagerExtensions._Editor_UnloadScene(biome.scene_impostor.Value);
-                    biome.scene_impostor = null;
-                }
-            }
-
-            if(!biome.IsLoadSceneImpostor_Editor && biome.IsExported 
-            && distance < BaseDistanceImpostor && distance > BaseDistanceLODO)
-            {
-                biome.IsLoadSceneImpostor_Editor = true;
-                biome.scene_impostor = SceneManagerExtensions._Editor_LoadScene(biome.AssetPath_StreamSceneLocal + biome.ExportDataId + "_impostor.unity");
-
-                if (biome.IsLoadSceneLod0_Editor)
-                {
-                    biome.IsLoadSceneLod0_Editor = false;
-                    if (biome.scene_lod0 != null)
-                        SceneManagerExtensions._Editor_UnloadScene(biome.scene_lod0.Value);
-                    biome.scene_lod0 = null;
-                }
-            }
-
-            if(biome.IsLoadSceneImpostor_Editor && distance > BaseDistanceImpostor * (1 + UnLoadDistancePercent))
-            {
-                biome.IsLoadSceneImpostor_Editor = false;
-                if (biome.scene_impostor != null)
-                    SceneManagerExtensions._Editor_UnloadScene(biome.scene_impostor.Value);
-                biome.scene_impostor = null;
-            }
-
-            if (biome.IsLoadSceneLod0_Editor && distance > BaseDistanceLODO * (1 + UnLoadDistancePercent))
-            {
-                biome.IsLoadSceneLod0_Editor = false;
-                if (biome.scene_lod0 != null)
-                    SceneManagerExtensions._Editor_UnloadScene(biome.scene_lod0.Value);
-                biome.scene_lod0 = null;
-            }
-        });
+        _editor_stream = EditorCoroutineUtility.StartCoroutine(_Editor_ChunkStream(), this);
     }
 
     public void _Editor_ExitWorldStream()
     {
-        biomes.ForEach(e => 
-        {
-            if (e.scene_lod0 != null)
-                SceneManagerExtensions._Editor_UnloadScene(e.scene_lod0.Value);
-            if (e.scene_impostor != null)
-                SceneManagerExtensions._Editor_UnloadScene(e.scene_impostor.Value);
+        if(_editor_stream != null)
+            EditorCoroutineUtility.StopCoroutine(_editor_stream);
 
-            e.IsLoadSceneLod0_Editor = false;
-            e.IsLoadSceneImpostor_Editor = false;
-        });
+        _editor_scene_lod0_load.Clear();
+        _editor_scene_impostor_load.Clear();
+
+        _editor_scene_lod0.ForEach(e => { if (e.scene != null) SceneManagerExtensions._Editor_UnloadScene(e.scene.Value); });
+        _editor_scene_impostor.ForEach(e => { if (e.scene != null) SceneManagerExtensions._Editor_UnloadScene(e.scene.Value); });
+        _editor_scene_lod0.Clear();
+        _editor_scene_impostor.Clear();
     }
+#endif
 }
 
 
@@ -197,26 +280,19 @@ public class WorldStreamEditor : Editor
 
         GUILayout.Space(10);
 
-        GUILayout.Label($"Biome Count ({owner.BiomeCount})");
-        if (GUILayout.Button("Auto Fine Biomes"))
-        {
-            owner.InitBiomes();
-        }
         GUILayout.BeginHorizontal();
         if(GUILayout.Button("Start Stream (Editor)"))
         {
             Debug.Log("[World Stream] Start In Editor");
-            EditorApplication.update = () =>
-            {
-                owner._Editor_UpdateWorldStream();
-            };
+            owner._Editor_UpdateWorldStream();
+            //EditorApplication.update = () => {};
         }
         if (GUILayout.Button("Stop Stream (Editor)"))
         {
             owner._Editor_ExitWorldStream();
             Debug.Log("[World Stream] Exit In Editor");
             EditorApplication.update = null;
-        }
+        } 
         GUILayout.EndHorizontal();
 
         serializedObject.Update();

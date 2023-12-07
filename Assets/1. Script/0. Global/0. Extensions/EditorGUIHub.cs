@@ -1,10 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor;
+
 using UnityEngine;
+
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
+
 
 public class EditorGUIHub
 {
+#if UNITY_EDITOR
     static public void BeginVerticalWindow(string title, float padding_hor=4)
     {
         GUILayout.BeginVertical(title, "window");
@@ -21,4 +27,5 @@ public class EditorGUIHub
         EditorGUILayout.Space(padding_vert);
         EditorGUILayout.EndVertical();
     }
+#endif
 }

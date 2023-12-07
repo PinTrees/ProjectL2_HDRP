@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1a7eed65e2fb5ef4e9fe15baae636e14, type: 3}
+  m_Name: "flower_\uD558\uC580\uC0C9\uAF43\uBB36\uC74C"
+  m_EditorClassIdentifier: 
+  ID: ddd75e22-5fda-4f23-96d7-9741b0de6111
+  Type: 1
+  IsRandomRotation: 1
+  IsUsedObstacle: 0
+  IsStaticObject: 0
+  IsAdjustRatio: 1
+  ImpostorLossRate: 0
+  ObstacleScale: {x: 0, y: 0, z: 0}
+  ObstacleRate: 0
+  Object: {fileID: 633316707852660641, guid: ed87d5fc2f8bf344090b0e71f165e88c, type: 3}
+  StaticObject: {fileID: 0}
+  ImpostorObject: {fileID: 0}
+  WidthMin: 2.57
+  WidthMax: 2.67
+  HeightMin: 1.99
+  HeightMax: 2.53
+  SlopMin: 0
+  SlopMax: 15
+  SlopeAliment: 0

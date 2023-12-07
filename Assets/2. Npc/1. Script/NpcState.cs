@@ -1,12 +1,11 @@
-
-using DG.Tweening;
-using Invector;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+
 using UnityEngine;
 using UnityEngine.AI;
 
+using DG.Tweening;
 
 
 namespace NPC.State
@@ -79,6 +78,8 @@ namespace NPC.State
         }
     }
 
+
+    #region EQUIP
     public class OnEquip : StateBase<NPC_STATE_TYPE>
     {
         Weapon wepone;
@@ -313,8 +314,10 @@ namespace NPC.State
             AI.animator.SetTrigger("StateOn");
         }
     }
+    #endregion
 
 
+    #region MOVEMENT
     public class Walk : StateBase<NPC_STATE_TYPE>
     {
         Npc owner;
@@ -399,8 +402,9 @@ namespace NPC.State
             }
         }
     }
+    #endregion
 
-
+    
     public class Def : StateBase<NPC_STATE_TYPE>
     {
         float block_delay;
@@ -428,6 +432,8 @@ namespace NPC.State
         }
     }
 
+
+    #region ATTACK
     public class Attack_Normal : StateBase<NPC_STATE_TYPE>
     {
         Npc owner;
@@ -516,7 +522,10 @@ namespace NPC.State
             }
         }
     }
+    #endregion
 
+
+    #region HIT
     public class Hit : StateBase<NPC_STATE_TYPE>
     {
         Npc owner;
@@ -561,8 +570,6 @@ namespace NPC.State
             }
         }
     }
-
-    // 앞잡 타격
     public class Hit_Kill : StateBase<NPC_STATE_TYPE>
     {
         Npc owner;
@@ -592,7 +599,6 @@ namespace NPC.State
             }
         }
     }
-    // 뒤잡 타격
     public class Hit_Back_Kill : StateBase<NPC_STATE_TYPE>
     {
         Npc owner;
@@ -625,6 +631,8 @@ namespace NPC.State
             }
         }
     }
+    #endregion
+
 
     public class Death : StateBase<NPC_STATE_TYPE>
     {

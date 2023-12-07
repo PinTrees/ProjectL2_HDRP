@@ -31,7 +31,7 @@ public class uShopUI : UIObject
     List<uShopItemSlot> slots = new();
     List<ShopItemData> shopItemList = new();
 
-    protected override void Start()
+    void Start()
     {
         for(int i = 0; i < shopMaxItemCount; ++i)
         {
@@ -71,7 +71,7 @@ public class uShopUI : UIObject
         }
     }
 
-    protected override void Update()
+    void Update()
     {
         if(IsShowPurchase())
         {

@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1a7eed65e2fb5ef4e9fe15baae636e14, type: 3}
+  m_Name: tree_pine_1
+  m_EditorClassIdentifier: 
+  Type: 0
+  ID: f41aaea8-8aaf-4b50-98f5-4e4d58515822
+  IsRandomRotation: 0
+  IsAdjustRatio: 1
+  limitCount: 0
+  Object: {fileID: 95021293063321827, guid: 28bc773f0d527994f9fe6464be1a98cb, type: 3}
+  ScaleWidth: 1

@@ -1,14 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
+
+#if UNITY_EDITOR
 using UnityEditor;
 using UnityEditor.AddressableAssets;
 using UnityEditor.AddressableAssets.Settings;
-using UnityEngine;
+#endif
 
 
 public class AddresableExtentions
 {
+#if UNITY_EDITOR
     public static void SetActiveAddresableFile(string path, string filename, bool active=true, string groupName="Default Local Group", string labelName="Default Label")
     {
         //Use this object to manipulate addressables
@@ -55,4 +59,5 @@ public class AddresableExtentions
         AssetDatabase.SaveAssets();
         Debug.Log("[Addresseable] SetActive Path");
     }
+#endif
 }

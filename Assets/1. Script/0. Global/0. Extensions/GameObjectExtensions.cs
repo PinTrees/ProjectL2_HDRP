@@ -2,13 +2,17 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEditor;
+
 using UnityEngine;
 
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 
 public class GameObjectExtensions 
 {
+#if UNITY_EDITOR
     public static GameObject InstantiatePrefab(GameObject target)
     {
         return (GameObject)PrefabUtility.InstantiatePrefab(target);
@@ -20,6 +24,7 @@ public class GameObjectExtensions
         spawn.transform.parent = parent;
         return spawn;
     }
+#endif
 
     public static GameObject InstantiateLastLOD(GameObject target, Transform parent=null)
     {

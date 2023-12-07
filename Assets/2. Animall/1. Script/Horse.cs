@@ -1,4 +1,3 @@
-using com.mobilin.games;
 using FIMSpace.FLook;
 using FIMSpace.FProceduralAnimation;
 using FIMSpace.FSpine;
@@ -11,7 +10,7 @@ using NPC.Animalls.State.HorseBase;
 [RequireComponent(typeof(Animator))]
 [RequireComponent(typeof(LegsAnimator))]
 [RequireComponent(typeof(Rigidbody))]
-[RequireComponent(typeof(mvHealthController))]
+[RequireComponent(typeof(vHealthController))]
 public class Horse : MonoBehaviour
 {
     [HideInInspector] public FSM<HORSE_STATE> AI = new FSM<HORSE_STATE>();

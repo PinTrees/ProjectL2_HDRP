@@ -20,17 +20,6 @@ namespace NPC.Animalls.State.Base
 
             AI.OnActionRepeat(1f, () =>
             {
-                /*if (owner.Target)
-                {
-                    if (AI.RandomPercent(owner.Data.AttackPatternDatas.First().ActivePercent))
-                    {
-                        owner.CurrentPattern = owner.Data.AttackPatternDatas.First();
-                        owner.CurrentAttack = owner.CurrentPattern.AttackDatas.First();
-                        AI.ChangeState(AnimalState.Attack);
-                        return;
-                    }
-                }*/
-
                 if (AI.RandomPercent(0.25f))
                 {
                     AI.ChangeState(AnimalState.Walk);

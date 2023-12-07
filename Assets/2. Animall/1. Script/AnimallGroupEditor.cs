@@ -1,11 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor;
-using UnityEditorInternal;
+
 using UnityEngine;
 
+#if UNITY_EDITOR
+using UnityEditor;
+using UnityEditorInternal;
+#endif
 
-// Editor Main
+
+#if UNITY_EDITOR
 [CustomEditor(typeof(AnimallGroup))]
 public class AnimallGroupEditor : Editor
 {
@@ -76,3 +80,4 @@ public class AnimallGroupEditor : Editor
         Handles.DrawWireDisc(value.transform.position, Vector3.up, value.WalkRange);
     }
 }
+#endif

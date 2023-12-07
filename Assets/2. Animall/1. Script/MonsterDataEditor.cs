@@ -2,11 +2,15 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Drawing.Drawing2D;
-using UnityEditor;
-using UnityEditorInternal;
+
 using UnityEngine;
 
+#if UNITY_EDITOR
+using UnityEditor;
+using UnityEditorInternal;
+#endif
 
+#if UNITY_EDITOR
 [CustomEditor(typeof(MonsterData))]
 public class MonsterDataEditor : Editor
 {
@@ -369,3 +373,4 @@ public class MonsterDataEditor : Editor
         }
     }
 }
+#endif

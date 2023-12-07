@@ -7,10 +7,7 @@ using MonsterState.Base;
 using TMPro;
 
 using UnityEngine.AI;
-using Invector;
-using com.mobilin.games;
 using FIMSpace.FProceduralAnimation;
-using UnityEditor.ShaderGraph.Internal;
 
 
 public enum MONSTER_STATE
@@ -33,7 +30,7 @@ public enum MONSTER_STATE
 [RequireComponent(typeof(NavMeshAgent))]
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(CapsuleCollider))]
-[RequireComponent(typeof(mvHealthController))]
+[RequireComponent(typeof(vHealthController))]
 public class Monster : MonoBehaviour
 {
     [SerializeField] Vector3 lookOffset;

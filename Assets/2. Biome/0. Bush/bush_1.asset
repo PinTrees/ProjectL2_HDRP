@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1a7eed65e2fb5ef4e9fe15baae636e14, type: 3}
+  m_Name: bush_1
+  m_EditorClassIdentifier: 
+  Type: 0
+  ID: b8a998f4-d1c5-4c59-8fce-5033d68912b2
+  IsRandomRotation: 1
+  IsAdjustRatio: 1
+  ImpostorLossRate: 0
+  BaseScale: {x: 0, y: 0, z: 0}
+  ObstacleRate: 0
+  Object: {fileID: 633316707852660641, guid: 9edfe7037bbbb6f48aaf3e74ffa8b23e, type: 3}
+  StaticObject: {fileID: 0}
+  ImpostorObject: {fileID: 0}
+  WidthMin: 1
+  WidthMax: 1
+  HeightMin: 1.5
+  HeightMax: 1.6
+  SlopMin: 0
+  SlopMax: 24.9
+  SlopeAliment: 1

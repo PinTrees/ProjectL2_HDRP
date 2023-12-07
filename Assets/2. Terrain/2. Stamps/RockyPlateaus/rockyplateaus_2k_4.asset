@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b21f947bd343f14fb0971bd1f4447fa, type: 3}
+  m_Name: rockyplateaus_2k_4
+  m_EditorClassIdentifier: 
+  height: {fileID: 2800000, guid: 09ad7fd593ce2044a9cd55814c5dd68f, type: 3}
+  color: {fileID: 0}
+  mask: {fileID: 0}
+  splat1: {fileID: 2800000, guid: 2e2052cfbc976664f8c9fa1e14b6baa5, type: 3}
+  splat2: {fileID: 0}
+  roadMask: {fileID: 0}

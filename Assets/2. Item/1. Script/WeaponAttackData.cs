@@ -1,12 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
-using UnityEditorInternal;
 
+using UnityEngine;
 
 #if UNITY_EDITOR
 using UnityEditor;
+using UnityEditorInternal;
 #endif
+
 
 [System.Serializable]
 [CreateAssetMenu(fileName = "Weapon Attack Data", menuName = "Scriptable Object/Weapon Attack Data", order = int.MaxValue)]

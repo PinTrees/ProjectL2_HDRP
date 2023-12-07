@@ -12,7 +12,7 @@ public class uQuestInteractUI : UIObject
     List<uQuestSlotUI> questSlots = new();
     List<QuestData> quests = new();
 
-    protected override void Start()
+    void Start()
     {
         for(int i = 0; i < QuestTitleMaxCount; ++i)
         {
@@ -28,7 +28,7 @@ public class uQuestInteractUI : UIObject
         Close();
     }
 
-    protected override void Update()
+    void Update()
     {
     }
 

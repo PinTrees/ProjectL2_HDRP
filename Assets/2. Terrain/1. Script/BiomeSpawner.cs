@@ -2,56 +2,19 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
-using UnityEditor.SceneTemplate;
+
 using UnityEngine;
 using UnityEngine.Rendering.HighDefinition;
 using UnityEngine.SceneManagement;
 using UnityEngine.Splines;
-using static UnityEngine.UI.GridLayoutGroup;
 using UnityEngine.ResourceManagement.ResourceProviders;
-
-
+using UnityEngine.EventSystems;
 
 
 #if UNITY_EDITOR
 using UnityEditor;
+using UnityEditor.SceneTemplate;
 #endif
-
-
-
-public class TerrainExtentionsX
-{
-    public static TerrainCollider GetNearTerrainCollider(Transform target)
-    {
-        var terrainColliders = GameObject.FindObjectsOfType<TerrainCollider>();
-
-        foreach(var t in terrainColliders)
-        {
-            if(target.position.x > t.transform.position.x && target.position.z > t.transform.position.z
-                && target.position.x < t.transform.position.x + 4000 && target.position.z < t.transform.position.z + 4000)
-            {
-                return t;
-            }
-        }
-
-        return null;
-    }
-    public static TerrainCollider GetNearTerrainCollider(Vector3 position)
-    {
-        var terrainColliders = GameObject.FindObjectsOfType<TerrainCollider>();
-
-        foreach (var t in terrainColliders)
-        {
-            if (position.x > t.transform.position.x && position.z > t.transform.position.z
-                && position.x < t.transform.position.x + 4000 && position.z < t.transform.position.z + 4000)
-            {
-                return t;
-            }
-        }
-
-        return null;
-    }
-}
 
 
 [System.Serializable]
@@ -62,24 +25,6 @@ public class SpawnedObjects
     public List<GameObject> spawnObjects = new();
 }
 
-
-[System.Serializable]
-public class BiomeSpawnData
-{
-    [SerializeField]
-    public BiomeData data;
-    public Vector3 offset;
-    public float strength = 1f;
-    public float slope_min = 0f;
-    public float slope_max = 45f;
-    public float height_min = 1;
-    public float height_max = 1;
-    public float width_min = 1;
-    public float width_max = 1;
-    public float distribution_center = 0;
-    public float slope_aliment = 0f;
-    public bool isRandomRotationY;
-}
 
 public class BiomeSpawner : MonoBehaviour
 {
@@ -93,15 +38,15 @@ public class BiomeSpawner : MonoBehaviour
     // 기즈모 드로우 사이즈
     public static float EditorSamplingScale = 3f;
 
-    [SerializeField]
-    [HideInInspector]
-    public List<BiomeSpawnData> spawn_object_datas = new();
-
     #region edite data value
     [HideInInspector]
     public Vector3 size;
     public bool IsStaticObject = false;
     #endregion
+
+    [Header("Nature Data")]
+    [SerializeField]
+    public List<NatureSpawnData> NatureSpawnDatas = new();
 
     [SerializeField]
     [HideInInspector]
@@ -131,17 +76,6 @@ public class BiomeSpawner : MonoBehaviour
     {
         scene_lod0 = null;
         scene_impostor = null;
-    }
-
-    private bool IsPrefab()
-    {
-        foreach(var g in spawn_object_datas)
-        {
-            if (PrefabUtility.GetPrefabAssetType(g.data.Object) == PrefabAssetType.NotAPrefab)
-                return false;
-        }
-
-        return true;
     }
 
     public int GetSpawnedObejctCount()
@@ -175,8 +109,8 @@ public class BiomeSpawner : MonoBehaviour
     /// <returns></returns>
     Vector3 GetRandomScale(BiomeSpawnData data)
     {
-        var width_scale_factor = Random.Range(data.width_min, data.width_max);
-        var height_scale_factor = Random.Range(data.height_min, data.height_max);
+        var width_scale_factor = Random.Range(data.data.WidthMin, data.data.WidthMax);
+        var height_scale_factor = Random.Range(data.data.HeightMin, data.data.HeightMax);
 
         if(data.data.IsAdjustRatio)
         {
@@ -189,7 +123,7 @@ public class BiomeSpawner : MonoBehaviour
     }
     #endregion
 
-
+#if UNITY_EDITOR
     #region EDITOR FUNC
     /// <summary>
     /// 에디터 함수
@@ -198,13 +132,6 @@ public class BiomeSpawner : MonoBehaviour
     public void _Editor_SpawnObject()
     {
         TerrainCollider terrain = TerrainExtentionsX.GetNearTerrainCollider(transform);
-
-        /// 소환할 오브젝트 정보가 프리팹인지 확인합니다.
-        if (!IsPrefab())
-        {
-            Debug.LogError("[Object Spawner] Not Prefab Object. Make Original Prefab");
-            return;
-        }
 
         /// 에디터 오브젝트의 위치를 재조정합니다.
         Ray ray = new Ray(new Vector3(transform.position.x, 1000, transform.position.z), Vector3.down);
@@ -222,9 +149,15 @@ public class BiomeSpawner : MonoBehaviour
             for(int j = (int)(size.z * -0.5f); j < (int)(size.z * 0.5f); ++j)
             {
                 var position = transform.position + transform.rotation * new Vector3(i, 0, j);
-                spawn_object_datas.ForEach(e =>
+
+                NatureSpawnDatas.ForEach(n =>
                 {
-                    _SpawnObject(e, position, e.strength);
+                    if (n == null) return;
+
+                    n.SpawnObjectData.ForEach(e =>
+                    {
+                        _SpawnObject(e, position, e.strength);
+                    });
                 });
             }
         }
@@ -276,8 +209,8 @@ public class BiomeSpawner : MonoBehaviour
                 if (terrain.Raycast(ray_spawn, out hit_spawn, Mathf.Infinity))
                 {
                     /// 지형의 소환 가능 경사를 확인합니다.
-                    if (Vector3.Angle(Vector3.up, hit_spawn.normal) > data.slope_max
-                        || Vector3.Angle(Vector3.up, hit_spawn.normal) < data.slope_min)
+                    if (Vector3.Angle(Vector3.up, hit_spawn.normal) > data.data.SlopMax
+                        || Vector3.Angle(Vector3.up, hit_spawn.normal) < data.data.SlopMin)
                     {
                         ++attempts;
                         continue;
@@ -289,9 +222,9 @@ public class BiomeSpawner : MonoBehaviour
                     spawn.transform.localScale = GetRandomScale(data);
                     spawn.transform.position = spawnPosition;
                     spawn.transform.position = hit_spawn.point + data.offset;
-                    if (data.isRandomRotationY) spawn.transform.eulerAngles = new Vector3(0, Random.Range(0, 360), 0);
+                    if (data.data.IsRandomRotation) spawn.transform.eulerAngles = new Vector3(0, Random.Range(0, 360), 0);
 
-                    if (data.slope_aliment > 0)
+                    if (data.data.SlopeAliment > 0)
                     {
                         var max_angle = Vector3.Angle(Vector3.up, hit_spawn.normal);
                         float alignmentAngle = Mathf.Lerp(0f, max_angle, 1f);
@@ -418,35 +351,8 @@ public class BiomeSpawner : MonoBehaviour
         });
     }
 
-    public void _Editor_ExportWorld()
-    {
-        if(ExportDataId.Length < 5)
-        {
-            Debug.LogError("[Biome Spawner] Create Uid First");
-            return;
-        }
-
-        if (!Directory.Exists(AssetPath_StreamSceneWorld))
-        {
-            Directory.CreateDirectory(AssetPath_StreamSceneWorld);
-        }
-
-        List<GameObject> gameobjects = new();
-        spawnedObjects.ForEach(e =>
-        {
-            e.spawnObjects.ForEach(s =>
-            {
-                gameobjects.Add(s);
-            });
-        });
-
-        SceneManagerExtensions.CreateSceneWithTerrainObject_World_Editor(gameobjects, AssetPath_StreamSceneWorld, ExportDataId);
-        IsExported = true;
-    }
-
     public void _Editor_ExportLocal()
     {
-
         if (ExportDataId.Length < 5)
         {
             Debug.LogError("[Biome Spawner] Create Uid First");
@@ -467,11 +373,10 @@ public class BiomeSpawner : MonoBehaviour
             });
         });
 
-        SceneManagerExtensions.CreateSceneWithTerrainObject_Local_Editor(gameobjects, AssetPath_StreamSceneLocal, ExportDataId, true);
+        SceneManagerExtensions._Editor_CreateSceneWithTerrainObject_Local(gameobjects, AssetPath_StreamSceneLocal, ExportDataId, true);
         IsExported = true;
     }
 
-#if UNITY_EDITOR
     void OnDrawGizmosSelected()
     {
         GameObject[] selectedObjects = Selection.gameObjects;
@@ -519,25 +424,9 @@ public class BiomeSpawner : MonoBehaviour
                 }
             }
         }
-
-        /*for (int x = (int)(size.x * -0.5f); x < (int)(size.x * 0.5f); ++x)
-        {
-            Vector3 pos1 = new Vector3(x, 0, size.z * -0.5f);
-            Vector3 pos2 = new Vector3(x, 0, size.z * 0.5f);
-
-            Gizmos.DrawLine(pos1, pos2);
-        }
-
-        for (int z = (int)(size.z * -0.5f); z < (int)(size.z * 0.5f); ++z)
-        {
-            Vector3 pos1 = new Vector3(size.x * -0.5f, 0, z);
-            Vector3 pos2 = new Vector3(size.x * 0.5f, 0, z);
-
-            Gizmos.DrawLine(pos1, pos2);
-        }*/
     }
+    #endregion
 #endif
-#endregion
 }
 
 
@@ -559,6 +448,8 @@ public class ObjectSpawnerEditor : Editor
 
         GUILayout.Space(10);
         GUILayout.Label($"Biome Spawn Area Size");
+        GUILayout.Label($"로컬 기반 내보내기를 사용할 경우 사이즈를 100 이상으로 설정 제한");
+        GUILayout.Label($"가능한 오브젝트의 수 2500 개 미만으로 생성");
         owner.size = EditorGUILayout.Vector3Field("", owner.size);
         
         GUILayout.Space(10);
@@ -576,41 +467,31 @@ public class ObjectSpawnerEditor : Editor
         GUILayout.EndHorizontal();
 
         GUILayout.Space(10);
-        GUILayout.Label($"Biome Spawn Cell Size: 1m X 1m");
-
-        GUILayout.Space(5);
-        GUILayout.BeginVertical("Biome Datas", "window");
+        GUILayout.Label("Nature Spawn Data");
+        GUILayout.BeginVertical("Nature Datas", "window");
         EditorGUILayout.BeginHorizontal();
-        if (GUILayout.Button("Add Biome Data"))
+        if (GUILayout.Button("Add Nature Data"))
         {
-            owner.spawn_object_datas.Add(new BiomeSpawnData());
+            owner.NatureSpawnDatas.Add(null);
             EditorUtility.SetDirty(target);
         }
         EditorGUILayout.EndHorizontal();
 
-        for (int i = 0; i < owner.spawn_object_datas.Count; ++i)
+        for (int i = 0; i < owner.NatureSpawnDatas.Count; ++i)
         {
             EditorGUILayout.Space(10);
-            var biomeData = owner.spawn_object_datas[i];
+            var biomeData = owner.NatureSpawnDatas[i];
             EditorGUILayout.BeginHorizontal();
-            owner.spawn_object_datas[i].data = (BiomeData)EditorGUILayout.ObjectField(owner.spawn_object_datas[i].data, typeof(BiomeData));
+            owner.NatureSpawnDatas[i] = (NatureSpawnData)EditorGUILayout.ObjectField(owner.NatureSpawnDatas[i], typeof(NatureSpawnData));
             if (GUILayout.Button("Remove"))
             {
-                owner.spawn_object_datas.RemoveAt(i);
+                owner.NatureSpawnDatas.RemoveAt(i);
                 EditorUtility.SetDirty(target);
             }
             GUILayout.EndHorizontal();
-
-            owner.spawn_object_datas[i].isRandomRotationY = EditorGUILayout.Toggle("Random Rotation Y", owner.spawn_object_datas[i].isRandomRotationY);
-            owner.spawn_object_datas[i].strength = EditorGUILayout.FloatField("Spawn Strength", owner.spawn_object_datas[i].strength);
-            owner.spawn_object_datas[i].offset = EditorGUILayout.Vector3Field("Offset", owner.spawn_object_datas[i].offset);
-            EditorGUILayout.MinMaxSlider("Slope", ref owner.spawn_object_datas[i].slope_min, ref owner.spawn_object_datas[i].slope_max, 0, 100);
-            EditorGUILayout.MinMaxSlider("Height (0.5 ~ 4.0)", ref owner.spawn_object_datas[i].height_min, ref owner.spawn_object_datas[i].height_max, 0.5f, 4f);
-            EditorGUILayout.MinMaxSlider("Width   (0.5 ~ 4.0)", ref owner.spawn_object_datas[i].width_min, ref owner.spawn_object_datas[i].width_max, 0.5f, 4f);
-            owner.spawn_object_datas[i].distribution_center = EditorGUILayout.Slider("중앙분포   (0 ~ 1)", owner.spawn_object_datas[i].distribution_center, 0f, 1f);
-            owner.spawn_object_datas[i].slope_aliment = EditorGUILayout.Slider("경사맞춤   (0 ~ 1)", owner.spawn_object_datas[i].slope_aliment, 0f, 1f);
         }
         GUILayout.EndVertical();
+
 
         EditorGUILayout.Space(20);
         GUILayout.Label($"Spawned Object Count: {owner.GetSpawnedObejctCount()}");

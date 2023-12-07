@@ -14,11 +14,11 @@ public class uShopItemSlot : UIObject
     [SerializeField] TextMeshProUGUI itemPriceText;
     [SerializeField] Button itemButton; 
 
-    protected override void Start()
+    void Start()
     {
     }
 
-    protected override void Update()
+    void Update()
     {
     }
 

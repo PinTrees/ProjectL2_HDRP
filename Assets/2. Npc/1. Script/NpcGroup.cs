@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+
 using UnityEngine;
 
 #if UNITY_EDITOR
@@ -23,9 +24,7 @@ public class NpcGroup : MonoBehaviour
 
     public List<Npc> npcs = new();
 
-
-
-
+# if UNITY_EDITOR
     public void _EditorSpawnObject()
     {
         TerrainCollider terrain = GameObject.FindWithTag("Terrain").GetComponent<TerrainCollider>();
@@ -92,6 +91,7 @@ public class NpcGroup : MonoBehaviour
             }
         });
     }
+#endif
 }
 
 

@@ -13,11 +13,11 @@ MonoBehaviour:
   m_Name: Layer Palette Base
   m_EditorClassIdentifier: 
   PaletteLayers:
+  - {fileID: 8574412962073106934, guid: 55b42c254e299e74ab595dad4c1bd6ec, type: 2}
   - {fileID: 8574412962073106934, guid: 9540467deb62ea54483d89d14bcb54dc, type: 2}
-  - {fileID: 8574412962073106934, guid: c4e7c614be95e41419f0b235011b8adb, type: 2}
-  - {fileID: 8574412962073106934, guid: 0c9a94c5c65a0a94eb5e8d8ab352d502, type: 2}
-  - {fileID: 8574412962073106934, guid: ae84f6cd7dfc1d14c96c532fe49e7be2, type: 2}
-  - {fileID: 8574412962073106934, guid: 33889b6c8d1a1f949b48ee3adb3dbb01, type: 2}
+  - {fileID: 8574412962073106934, guid: 60b50be515e32a944ae39f9072da82e3, type: 2}
   - {fileID: 8574412962073106934, guid: ec00da4405c929b4a907fa24df15f161, type: 2}
-  - {fileID: 8574412962073106934, guid: 35ddcfee153bcce469c6c8f905d11522, type: 2}
-  - {fileID: 8574412962073106934, guid: cf6aa078060ca334a85ffe0e27bfddfe, type: 2}
+  - {fileID: 8574412962073106934, guid: c4e7c614be95e41419f0b235011b8adb, type: 2}
+  - {fileID: 8574412962073106934, guid: 3badb953833164e4780115f0cb68ed11, type: 2}
+  - {fileID: 8574412962073106934, guid: 0a7dc8deeb08e394fbf88232e6d285b4, type: 2}
+  - {fileID: 8574412962073106934, guid: 18c96d9f2238212408414b04c826a98b, type: 2}

@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1a7eed65e2fb5ef4e9fe15baae636e14, type: 3}
+  m_Name: rock_forest_nm_2
+  m_EditorClassIdentifier: 
+  Type: 2
+  ID: d732ca8d-b256-4f25-91b6-7a42d10a3c91
+  IsRandomRotation: 1
+  IsAdjustRatio: 1
+  ImpostorLossRate: 0
+  BaseScale: {x: 0, y: 0, z: 0}
+  ObstacleRate: 0
+  Object: {fileID: 7046631540937994666, guid: fd7869b37f2a04649925a66f439e4d23, type: 3}
+  StaticObject: {fileID: 0}
+  ImpostorObject: {fileID: 0}
+  WidthMin: 3.67
+  WidthMax: 4
+  HeightMin: 3.24
+  HeightMax: 4
+  SlopMin: 0
+  SlopMax: 33
+  SlopeAliment: 1

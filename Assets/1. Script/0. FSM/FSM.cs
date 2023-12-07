@@ -1,12 +1,19 @@
-using com.mobilin.games;
-using DG.Tweening;
-using FIMSpace.FLook;
-using FIMSpace.FProceduralAnimation;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+
 using UnityEngine;
 using UnityEngine.AI;
+
+using DG.Tweening;
+using FIMSpace.FLook;
+using FIMSpace.FProceduralAnimation;
+
+
+/***
+ * 인벡터 및 MIS 미들웨어 사용금지
+ */
+
 
 public class FSM<T>
 {
@@ -28,7 +35,7 @@ public class FSM<T>
 
 
     #region Controller
-    public mvHealthController healthController;
+    public vHealthController healthController;
     public WeaponController weaponController;
     #endregion
 
@@ -80,7 +87,7 @@ public class FSM<T>
         owner?.TryGetComponent<NavMeshAgent>(out nav);
         owner?.TryGetComponent<Rigidbody>(out rb);
         owner?.TryGetComponent<Animator>(out animator);
-        owner?.TryGetComponent<mvHealthController>(out healthController);
+        owner?.TryGetComponent<vHealthController>(out healthController);
         owner?.TryGetComponent<Collider>(out collider);
         owner?.TryGetComponent<FLookAnimator>(out lookAnimator);
 
